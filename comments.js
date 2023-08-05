@@ -1,2 +1,36 @@
 //create web server
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var Comment = require('./models/comment');
+var Post = require('./models/post');
+var User = require('./models/user');
+var jwt = require('jsonwebtoken');
+var config = require('./config');
+var cors = require('cors');
+var expressJwt = require('express-jwt');
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+var jwtDecode = require('jwt-decode');
+var moment = require('moment');
+var fs = require('fs');
+var multer = require('multer');
+var path = require('path');
+var async = require('async');
+var crypto = require('crypto');
+var request = require('request');
+var http = require('http');
+var https = require('https');
+var url = require('url');
+var cheerio = require('cheerio');
+var mongoosePaginate = require('mongoose-paginate');
+var port = process.env.PORT || 8080;
+var router = express.Router();
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+var _ = require('lodash');
+var jwt = require('jsonwebtoken');
+var socketioJwt = require('socketio-jwt');
+var redis = require('red
 
