@@ -1,36 +1,62 @@
 //create web server
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var Comment = require('./models/comment');
-var Post = require('./models/post');
-var User = require('./models/user');
-var jwt = require('jsonwebtoken');
-var config = require('./config');
-var cors = require('cors');
-var expressJwt = require('express-jwt');
-var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
-var jwtDecode = require('jwt-decode');
-var moment = require('moment');
-var fs = require('fs');
-var multer = require('multer');
-var path = require('path');
-var async = require('async');
-var crypto = require('crypto');
-var request = require('request');
-var http = require('http');
-var https = require('https');
-var url = require('url');
-var cheerio = require('cheerio');
-var mongoosePaginate = require('mongoose-paginate');
-var port = process.env.PORT || 8080;
-var router = express.Router();
-var server = http.createServer(app);
-var io = require('socket.io').listen(server);
-var _ = require('lodash');
-var jwt = require('jsonwebtoken');
-var socketioJwt = require('socketio-jwt');
-var redis = require('red
+const express = require('express');
+const router = express.Router();
+//import the model
+const Comment = require('../models/Comment');
 
+//create route for comments
+//get all comments
+router.get('/', async (req, res) => {
+    try {
+        const comments = await Comment.find();
+        res.json(comments);
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
+
+//submit a comment
+router.post('/', async (req, res) => {
+    const comment = new Comment({
+        name: req.body.name,
+        comment: req.body.comment
+    });
+    try {
+        const savedComment = await comment.save();
+        res.json(savedComment);
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
+
+//get specific comment
+router.get('/:commentId', async (req, res) => {
+    try {
+        const comment = await Comment.findById(req.params.commentId);
+        res.json(comment);
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
+
+//delete specific comment
+router.delete('/:commentId', async (req, res) => {
+    try {
+        const removedComment = await Comment.remove({ _id: req.params.commentId });
+        res.json(removedComment);
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
+
+//update a comment
+router.patch('/:commentId', async (req, res) => {
+    try {
+        const updatedComment = await Comment.updateOne({ _id: req.params.commentId }, { $set: { comment: req.body.comment } });
+        res.json(updatedComment);
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
+
+module.exports = router;
